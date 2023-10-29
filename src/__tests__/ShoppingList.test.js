@@ -12,23 +12,28 @@ const testData = [
 
 test("displays all items when initially rendered", () => {
   const { container } = render(<ShoppingList items={testData} />);
-  expect(container.querySelector(".Items").children).toHaveLength(
-    testData.length
-  );
+  // Ensure that all items are initially displayed
+  expect(container.querySelectorAll(".Items li")).toHaveLength(testData.length);
 });
 
 test("displays only items that match the selected category", () => {
   const { container } = render(<ShoppingList items={testData} />);
 
+  // Change the category to "Dairy"
   fireEvent.change(screen.getByRole("combobox"), {
     target: { value: "Dairy" },
   });
 
-  expect(container.querySelector(".Items").children).toHaveLength(2);
+  // Ensure that only items with category "Dairy" are displayed
+  const dairyItems = testData.filter((item) => item.category === "Dairy");
+  expect(container.querySelectorAll(".Items li")).toHaveLength(dairyItems.length);
 
+  // Change the category to "Dessert"
   fireEvent.change(screen.getByRole("combobox"), {
     target: { value: "Dessert" },
   });
 
-  expect(container.querySelector(".Items").children).toHaveLength(1);
+  // Ensure that only items with category "Dessert" are displayed
+  const dessertItems = testData.filter((item) => item.category === "Dessert");
+  expect(container.querySelectorAll(".Items li")).toHaveLength(dessertItems.length);
 });
